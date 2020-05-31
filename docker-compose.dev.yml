@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+    admin:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+            target: base
+        volumes:
+            - "./src:/usr/src/app/src"
+            - "./public:/usr/src/app/public"
+        ports:
+            - "3001:3000"
+        stdin_open: true
+        container_name: admin
+        command: yarn start
