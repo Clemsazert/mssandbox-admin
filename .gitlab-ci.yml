@@ -1,0 +1,12 @@
+stages:
+  - lint
+
+linter:
+  stage: lint
+  image: node:12.16.1-alpine
+  only:
+    - develop
+    - master
+  script:
+    - yarn install
+    - yarn lint
