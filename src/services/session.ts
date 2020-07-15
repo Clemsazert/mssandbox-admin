@@ -63,8 +63,11 @@ class Session {
   }
 }
 
-const expressSession = new Session(process.env.REACT_APP_EXPRESS_API_URL || 'localhost:8000');
-const flaskSession = new Session(process.env.REACT_APP_FLASK_API_URL || 'localhost:8001');
-const goSession = new Session('localhost:8005');
+const expressSession = new Session(process.env.REACT_APP_EXPRESS_API_URL || 'http://localhost:8000');
+const flaskSession = new Session(process.env.REACT_APP_FLASK_API_URL || 'http://localhost:8001');
+const goSession = new Session(process.env.REACT_APP_GO_API_URL || 'http://localhost:8002');
+const railsSession = new Session(process.env.REACT_APP_RAILS_API_URL || 'http://localhost:8003');
 
-export { expressSession, flaskSession, goSession };
+export {
+  expressSession, flaskSession, goSession, railsSession
+};
