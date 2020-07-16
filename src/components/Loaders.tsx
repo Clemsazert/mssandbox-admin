@@ -42,7 +42,7 @@ export const BaseModal: React.FC<ModalProps> = ({
     <Modal.Body>{children}</Modal.Body>
     {buttons.length > 0 && (
       <Modal.Footer>
-        {buttons.map((button) => (
+        {buttons.map(button => (
           <Button
             variant={button.variant || 'primary'}
             onClick={button.onClick}
@@ -55,11 +55,9 @@ export const BaseModal: React.FC<ModalProps> = ({
   </Modal>
 );
 
-export const DotaLoader: React.FC<{show: boolean}> = ({ show }) => {
-  return (
-    <BaseModal show={show}>
-      <img src={'/dota_logo.png'} />
-      <Spinner animation="border" />
-    </BaseModal>
-  );
-};
+export const DotaLoader: React.FC<{show: boolean}> = ({ show }) => (
+  <BaseModal show={show}>
+    <img src="/dota_logo.png" alt="dota 2 logo <3" width={40} height={40} />
+    <Spinner animation="border" />
+  </BaseModal>
+);

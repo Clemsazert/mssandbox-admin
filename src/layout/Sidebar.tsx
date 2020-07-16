@@ -6,7 +6,11 @@ import { routes } from '../routes';
 
 const styles = {
   main: {
-    backgroundColor: '#475057', width: '15%', paddingTop: 20, paddingLeft: 10, paddingRight: 10
+    backgroundColor: '#475057',
+    width: '15%',
+    paddingTop: 20,
+    paddingLeft: 10,
+    paddingRight: 10
   },
   navLink: { marginBottom: 20, textDecoration: 'none' },
   navRow: { alignItems: 'center', '&:hover': { backgroundColor: '#475090' } },
@@ -16,7 +20,9 @@ const styles = {
 export const Sidebar: React.FC = () => (
   <div style={styles.main}>
     <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion">
-      {routes.map(({ path, title, icon }) => (title ? <NavLink path={path} title={title} icon={icon} /> : <></>))}
+      {routes.map(({ path, title, icon }) => (
+        title ? <NavLink path={path} title={title} icon={icon} /> : <></>
+      ))}
     </ul>
   </div>
 );

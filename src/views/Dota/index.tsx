@@ -4,10 +4,11 @@ import { useQuery } from '@apollo/client';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Image from 'react-bootstrap/Image';
+import Button from 'react-bootstrap/Button';
 
 import { DotaLoader } from '../../components/Loaders';
 
-import { DOTATeam } from '../../models/dotaModels';
+import { DOTATeamLight } from '../../models/dotaModels';
 import { GET_ALL_TEAMS } from './graphql';
 
 const styles = {
@@ -26,8 +27,8 @@ const styles = {
   }
 };
 
-export const Dota = () => {
-  const { data, loading } = useQuery<{ teams: DOTATeam[] }>(GET_ALL_TEAMS);
+export const Dota: React.FC = () => {
+  const { data, loading } = useQuery<{ teams: DOTATeamLight[] }>(GET_ALL_TEAMS);
   return (
     <div className="w-100 h-100 pl-4 pr-4">
       <DotaLoader show={loading} />
@@ -35,15 +36,15 @@ export const Dota = () => {
       <div style={styles.cardsContainer}>
         {data
           ? data.teams.map(({ id, name, logoUrl }) => (
-              <TeamDisplay id={id} name={name} logoUrl={logoUrl} />
-            ))
+            <TeamDisplay id={id} name={name} logoUrl={logoUrl} />
+          ))
           : 'No teams'}
       </div>
     </div>
   );
 };
 
-const TeamDisplay: React.FC<DOTATeam> = ({ id, name, logoUrl }) => (
+const TeamDisplay: React.FC<DOTATeamLight> = ({ id, name, logoUrl }) => (
   <Card style={styles.teamCard}>
     <Card.Body>
       <Row
@@ -53,9 +54,10 @@ const TeamDisplay: React.FC<DOTATeam> = ({ id, name, logoUrl }) => (
           justifyContent: 'space-evenly'
         }}
       >
-        <Image src={logoUrl} style={styles.logo} />
+        <Image src={logoUrl} style={styles.logo} alt="such a beautiful team logo" />
         {name}
       </Row>
     </Card.Body>
+    <Button onClick={() => { console.log('Display team', id); }} />
   </Card>
 );
