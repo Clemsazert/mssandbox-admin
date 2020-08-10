@@ -24,16 +24,29 @@ export const TeamView: React.FC = () => {
       {team ? (
         <>
           <Row>
-            <Card>
-              <Card.Header>{team.name}</Card.Header>
-              <Card.Body>
-                <p>Last Match Time: {moment(team.lastMatchTime).format('L')}</p>
-                <p>Rating: {team.rating}</p>
-                <p>Game Won: {team.wins}</p>
-                <p>Game Lost: {team.losses}</p>
-                <p>Tag: {team.tag}</p>
-              </Card.Body>
-            </Card>
+            <Col>
+              <Card>
+                <Card.Header>{team.name}</Card.Header>
+                <Card.Body>
+                  <p>
+                    Last Match Time:{' '}
+                    {moment.unix(team.lastMatchTime).format('L')}
+                  </p>
+                  <p>Rating: {team.rating}</p>
+                  <p>Game Won: {team.wins}</p>
+                  <p>Game Lost: {team.losses}</p>
+                  <p>Tag: {team.tag}</p>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col>
+              <iframe
+                title="stream"
+                src="http://player.twitch.tv/?channel=froggedtv&autoplay=true&parent=localhost&muted=true"
+                height={400}
+                width={600}
+              />
+            </Col>
           </Row>
           <Row>
             {team.players.map(player => (

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
+import { useHistory } from 'react-router-dom';
 
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
@@ -13,7 +14,9 @@ import { GET_ALL_TEAMS } from './graphql';
 
 const styles = {
   cardsContainer: {
-    // display: 'flex'
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center'
   },
   teamCard: {
     width: '25%',
@@ -29,14 +32,20 @@ const styles = {
 
 export const Dota: React.FC = () => {
   const { data, loading } = useQuery<{ teams: DOTATeamLight[] }>(GET_ALL_TEAMS);
+  const [test, setTest] = useState<boolean>(false);
+  const history = useHistory();
+  const displayTeam = (id: number) => {
+    history.push(`/dota/team/${id}`);
+  };
   return (
     <div className="w-100 h-100 pl-4 pr-4">
-      <DotaLoader show={loading} />
+      <Button onClick={() => setTest(!test)} title="Test Loader" />
+      <DotaLoader show={loading || test} />
       <p>Here is my dota team following app !</p>
-      <div style={styles.cardsContainer}>
+      <div style={styles.cardsContainer as { display: string; flexWrap: 'wrap'; justifyContent: string }}>
         {data
           ? data.teams.map(({ id, name, logoUrl }) => (
-            <TeamDisplay id={id} name={name} logoUrl={logoUrl} />
+            <TeamDisplay id={id} name={name} logoUrl={logoUrl} onDisplayTeam={displayTeam} />
           ))
           : 'No teams'}
       </div>
@@ -44,7 +53,16 @@ export const Dota: React.FC = () => {
   );
 };
 
-const TeamDisplay: React.FC<DOTATeamLight> = ({ id, name, logoUrl }) => (
+interface TeamDisplayProps extends DOTATeamLight {
+  onDisplayTeam: (id: number) => void;
+}
+
+const TeamDisplay: React.FC<TeamDisplayProps> = ({
+  id,
+  name,
+  logoUrl,
+  onDisplayTeam
+}) => (
   <Card style={styles.teamCard}>
     <Card.Body>
       <Row
@@ -58,6 +76,6 @@ const TeamDisplay: React.FC<DOTATeamLight> = ({ id, name, logoUrl }) => (
         {name}
       </Row>
     </Card.Body>
-    <Button onClick={() => { console.log('Display team', id); }} />
+    <Button title="Display" onClick={() => { onDisplayTeam(id); }} />
   </Card>
 );
