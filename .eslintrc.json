@@ -43,7 +43,8 @@
     "arrow-parens": ["error", "as-needed"],
     "react/jsx-props-no-spreading": ["error", { "custom": "ignore" }],
     "react/prop-types": "off",
-    "no-nested-ternary": "off"
+    "no-nested-ternary": "off",
+    "linebreak-style": ["error", "windows"]
   },
   "settings": {
     "import/extensions": [".js", ".ts"],

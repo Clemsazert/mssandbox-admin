@@ -39,13 +39,28 @@ export const Dota: React.FC = () => {
   };
   return (
     <div className="w-100 h-100 pl-4 pr-4">
-      <Button onClick={() => setTest(!test)} title="Test Loader" />
+      <Button onClick={() => setTest(!test)}>Test Loader</Button>
       <DotaLoader show={loading || test} />
-      <p>Here is my dota team following app !</p>
-      <div style={styles.cardsContainer as { display: string; flexWrap: 'wrap'; justifyContent: string }}>
+      <p>
+        Here is my dota team following app ! Little games will be added too !
+      </p>
+      <div
+        style={
+          styles.cardsContainer as {
+            display: string;
+            flexWrap: 'wrap';
+            justifyContent: string;
+          }
+        }
+      >
         {data
           ? data.teams.map(({ id, name, logoUrl }) => (
-            <TeamDisplay id={id} name={name} logoUrl={logoUrl} onDisplayTeam={displayTeam} />
+            <TeamDisplay
+              id={id}
+              name={name}
+              logoUrl={logoUrl}
+              onDisplayTeam={displayTeam}
+            />
           ))
           : 'No teams'}
       </div>
@@ -72,10 +87,20 @@ const TeamDisplay: React.FC<TeamDisplayProps> = ({
           justifyContent: 'space-evenly'
         }}
       >
-        <Image src={logoUrl} style={styles.logo} alt="such a beautiful team logo" />
+        <Image
+          src={logoUrl}
+          style={styles.logo}
+          alt="such a beautiful team logo"
+        />
         {name}
       </Row>
     </Card.Body>
-    <Button title="Display" onClick={() => { onDisplayTeam(id); }} />
+    <Button
+      title="Display"
+      onClick={() => {
+        onDisplayTeam(id);
+      }}
+    >Display
+    </Button>
   </Card>
 );

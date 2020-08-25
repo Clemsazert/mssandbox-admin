@@ -1,6 +1,7 @@
 import { Dashboard } from './views/Dashboard';
 import { Dota } from './views/Dota';
 import { TeamView } from './views/Dota/TeamView';
+import { PlayTab } from './views/Play';
 
 export const routes = [
   {
@@ -19,5 +20,11 @@ export const routes = [
     component: Dota,
     title: 'Dota',
     icon: 'fab fa-steam fa-2x text-white'
+  },
+  {
+    path: '/play',
+    component: PlayTab,
+    title: 'Play !',
+    icon: 'fas fa-gamepad fa-2x text-white'
   }
 ];
