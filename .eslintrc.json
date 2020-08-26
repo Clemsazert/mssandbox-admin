@@ -44,7 +44,7 @@
     "react/jsx-props-no-spreading": ["error", { "custom": "ignore" }],
     "react/prop-types": "off",
     "no-nested-ternary": "off",
-    "linebreak-style": ["error", "windows"]
+    "linebreak-style": "off"
   },
   "settings": {
     "import/extensions": [".js", ".ts"],
