@@ -1,21 +1,17 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLazyQuery } from '@apollo/client';
 
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+import { GET_QUIZZ } from './graphql';
 import { DotaLoader } from '../../components/Loaders';
-
-enum GameState {
-  BEFORE = 'BEFORE',
-  WAITING = 'WAITING',
-  PLAY = 'PLAY',
-  DONE = 'DONE'
-}
 
 type QuizzQuestion = {
   question: string;
   answers: string[];
+  type: string;
   correct: number;
 };
 
@@ -24,54 +20,62 @@ interface PlayProps {
   onQuizzEnd: (score: number) => void;
 }
 
-const dummyQuizz = [
-  {
-    question: 'QUi est le meilleur joueur de posiiton 5 ?',
-    answers: ['Puppey', 'Notail', 'Insania', 'Kuroky'],
-    correct: 1
-  },
-  {
-    question: 'Qui est le meilleur coach ?',
-    answers: ['Loda', 'Bulba', 'Ceeeeeeb', 'Dendi'],
-    correct: 2
-  }
-];
-
 type Result = {
-  score: number
-}
+  score: number;
+};
 
 export const PlayTab: React.FC = () => {
   const [gameStatus, setGameStatus] = useState<string>('BEFORE');
   const [result, setResult] = useState<Result | null>(null);
+  const [getQuizz, { data, loading }] = useLazyQuery(GET_QUIZZ);
+  useEffect(() => {
+    if (data && gameStatus !== 'DONE') {
+      setGameStatus('PLAY');
+    }
+  }, [data]);
   const startGame = () => {
-    setGameStatus('WATING');
-    setTimeout(() => setGameStatus('PLAY'), 1000);
+    getQuizz();
   };
   const onQuizzEnd = (score: number) => {
     setGameStatus('DONE');
     setResult({ score });
   };
 
-  const switchDisplay = (status: string) => {
+  const startNewGame = () => {
+    setGameStatus('BEFORE');
+    setResult(null);
+    startGame();
+  };
+
+  const switchGameStatus = (status: string) => {
     switch (status) {
       case 'BEFORE':
         return <Button onClick={startGame}>Start a new game</Button>;
-      case 'WAITING':
-        return <p>Retrieving that questions !</p>;
       case 'PLAY':
-        return <Play quizz={dummyQuizz} onQuizzEnd={onQuizzEnd} />;
+        if (data) {
+          return <Play quizz={data.generateQuizz} onQuizzEnd={onQuizzEnd} />;
+        }
+        return <></>;
       case 'DONE':
-        return <p>{result ? `Well Played ! Your score is ${result.score} !` : 'Well Played !'}</p>;
+        return (
+          <div>
+            <p>
+              {result
+                ? `Well Played ! Your score is ${result.score} !`
+                : 'Well Played !'}
+            </p>
+            <Button onClick={startNewGame}>Play again</Button>
+          </div>
+        );
       default:
         return <></>;
     }
   };
   return (
     <div className="w-100 h-100 pl-4 pr-4">
-      <p>Lets play !</p>
-      <DotaLoader show={false} />
-      {switchDisplay(gameStatus)}
+      <DotaLoader show={loading} />
+      <p>{'Let\'s Play !'}</p>
+      {switchGameStatus(gameStatus)}
     </div>
   );
 };
@@ -90,44 +94,61 @@ const Play: React.FC<PlayProps> = ({ quizz, onQuizzEnd }) => {
     quizz[0]
   );
   const [score, setScore] = useState<number>(0);
-  const [statusMap, setStatusMap] = useState<ButtonStatus[]>((new Array(quizz[0].answers.length)).fill('default'));
-  const generateStatusMap = (input: number, answersNumber: number, correct: number) => {
-    const res = (new Array(answersNumber)).fill('secondary');
+  const [statusMap, setStatusMap] = useState<ButtonStatus[]>(
+    new Array(quizz[0].answers.length).fill('default')
+  );
+  const generateStatusMap = (
+    input: number,
+    answersNumber: number,
+    correct: number
+  ) => {
+    const res = new Array(answersNumber).fill('secondary');
     res[input] = 'danger';
     res[correct] = 'success';
     return res;
   };
-  const validateAnswer = useCallback(
-    (index: number) => () => {
-      console.log(
-        'Answer',
+  const validateAnswer = (index: number) => () => {
+    let newScore = score;
+    if (index === currentQuestion.correct) {
+      newScore += 1;
+      setScore(newScore);
+    }
+    setStatusMap(
+      generateStatusMap(
         index,
-        index === currentQuestion.correct ? 'is the right one' : 'is wrong'
-      );
-      if (index === currentQuestion.correct) {
-        setScore(score + 1);
+        currentQuestion.answers.length,
+        currentQuestion.correct
+      )
+    );
+    setTimeout(() => {
+      if (cursor < questionNumber - 1) {
+        setCurrentQuestion(quizz[cursor + 1]);
+        setCursor(cursor + 1);
+        setStatusMap(new Array(quizz[0].answers.length).fill('default'));
+      } else {
+        onQuizzEnd(newScore);
       }
-      setStatusMap(generateStatusMap(index, currentQuestion.answers.length, currentQuestion.correct));
-      setTimeout(() => {
-        if (cursor < questionNumber) {
-          setCurrentQuestion(quizz[cursor + 1]);
-          setCursor(cursor + 1);
-        } else {
-          onQuizzEnd(score);
-        }
-      }, 2000);
-    },
-    [currentQuestion, cursor]
-  );
+    }, 2000);
+  };
+
   return (
     <div>
       <Row>
-        <Col>{currentQuestion.question}</Col>
+        <Col>
+          <p>
+            Question {cursor + 1}/{questionNumber} :
+          </p>
+          <p>{currentQuestion.question}</p>
+        </Col>
       </Row>
       <Row>
         {currentQuestion.answers.map((answer, index) => (
           <Col>
-            <AnswerButton handlePress={validateAnswer(index)} answer={answer} status={statusMap[index]} />
+            <AnswerButton
+              handlePress={validateAnswer(index)}
+              answer={answer}
+              status={statusMap[index]}
+            />
           </Col>
         ))}
       </Row>
@@ -145,10 +166,8 @@ const AnswerButton: React.FC<AnswerButtonProps> = ({
   answer,
   handlePress,
   status = 'default'
-}) => {
-  return (
-    <Button className={`bg-${status}`} onClick={handlePress}>
-      {answer}
-    </Button>
-  );
-};
+}) => (
+  <Button className={`bg-${status}`} onClick={handlePress}>
+    {answer}
+  </Button>
+);

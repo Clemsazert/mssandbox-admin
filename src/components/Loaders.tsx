@@ -39,11 +39,19 @@ export const BaseModal: React.FC<ModalProps> = ({
   const [timeoutClose, setTimeoutClose] = useState<boolean>(true);
   const startTimeout = () => {
     if (timeout) {
-      setTimeout(() => { setTimeoutClose(false); }, timeout);
+      setTimeout(() => {
+        setTimeoutClose(false);
+      }, timeout);
     }
   };
   return (
-    <Modal show={show && timeoutClose} onHide={onClose} onEntered={startTimeout} size={size} keyboard>
+    <Modal
+      show={show && timeoutClose}
+      onHide={onClose}
+      onEntered={startTimeout}
+      size={size}
+      keyboard
+    >
       {title && (
         <Modal.Header closeButton={closeButton}>
           {title && <Modal.Title>{title}</Modal.Title>}
@@ -75,7 +83,13 @@ export const DotaLoader: React.FC<{ show: boolean }> = ({ show }) => (
         justifyContent: 'center'
       }}
     >
-      <img src="/dota_logo.png" alt="dota 2 logo <3" width={40} height={40} style={{ animation: 'spin 2s ease infinite' }} />
+      <img
+        src="/dota_logo.png"
+        alt="dota 2 logo <3"
+        width={40}
+        height={40}
+        style={{ animation: 'spin 2s ease infinite' }}
+      />
     </div>
   </BaseModal>
 );
