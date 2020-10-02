@@ -1,0 +1,11 @@
+version: "3.7"
+services:
+    admin_prod:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        environment:
+            - PORT=80
+        ports:
+            - "3000:80"
+        image: admin-prod:v1.0.0

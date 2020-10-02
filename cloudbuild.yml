@@ -1,4 +1,6 @@
 steps:
     - name: 'gcr.io/cloud-builders/docker'
       args: [ 'build', '-t', 'gcr.io/mssandbox-278805/mssandbox_admin:$SHORT_SHA', '.' ]
+      env:
+        - 'PORT=80'
 images: ['gcr.io/mssandbox-278805/mssandbox_admin:$SHORT_SHA']
