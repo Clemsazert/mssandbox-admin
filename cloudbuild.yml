@@ -1,6 +1,12 @@
 steps:
+    - name: 'gcr.io/cloud-builders/gcloud'
+      entrypoint: 'bash'
+      args:
+      - echo "REACT_APP_EXPRESS_API_URL=${_EXPRESS_API_URL}" > /workspace/.env
+      substitutions:
+        _EXPRESS_API_URL: clem-didom.ninja/api
     - name: 'gcr.io/cloud-builders/docker'
-      args: [ 'build', '-t', 'gcr.io/mssandbox-278805/mssandbox_admin:$SHORT_SHA', '.' ]
+      args: [ 'cp', '/workspace/.env', '.', '&&', 'build', '-t', 'gcr.io/mssandbox-278805/mssandbox_admin:$SHORT_SHA', '.' ]
       env:
         - 'PORT=80'
 images: ['gcr.io/mssandbox-278805/mssandbox_admin:$SHORT_SHA']
