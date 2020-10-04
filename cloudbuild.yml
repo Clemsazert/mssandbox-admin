@@ -1,12 +1,9 @@
 steps:
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: /bin/bash
-    args: ["-c", 'echo "REACT_APP_EXPRESS_API_URL=$_EXPRESS_API_URL" > test.txt']
+    args: ["-c", 'echo "REACT_APP_EXPRESS_API_URL=$_EXPRESS_API_URL" > .env']
   - name: gcr.io/cloud-builders/docker
     args:
-      - cat
-      - test.txt
-      - build
       - "-t"
       - "$_IMAGE_NAME:$COMMIT_SHA"
       - .
