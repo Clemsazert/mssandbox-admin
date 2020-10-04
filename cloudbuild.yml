@@ -1,8 +1,7 @@
 steps:
   - name: gcr.io/cloud-builders/gcloud
-    entrypoint: "bash"
-    args:
-      - echo "REACT_APP_EXPRESS_API_URL=$_EXPRESS_API_URL" > test.txt
+    entrypoint: /bin/bash
+    args: ["-c", 'echo "REACT_APP_EXPRESS_API_URL=$_EXPRESS_API_URL" > test.txt']
   - name: gcr.io/cloud-builders/docker
     args:
       - cat
