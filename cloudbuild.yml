@@ -4,6 +4,7 @@ steps:
     args: ["-c", 'echo "REACT_APP_EXPRESS_API_URL=$_EXPRESS_API_URL" > .env']
   - name: gcr.io/cloud-builders/docker
     args:
+      - build
       - "-t"
       - "$_IMAGE_NAME:$COMMIT_SHA"
       - .
