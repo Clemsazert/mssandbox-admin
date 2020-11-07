@@ -9,7 +9,7 @@ services:
             - "./src:/usr/src/app/src"
             - "./public:/usr/src/app/public"
         ports:
-            - "3001:3000"
+            - "3000:3000"
         stdin_open: true
         container_name: admin-dev
         command: yarn start
