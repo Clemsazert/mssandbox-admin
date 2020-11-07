@@ -6,4 +6,4 @@ steps:
     args: [ 'build', '-t', 'gcr.io/mssandbox-278805/mssandbox_admin:$SHORT_SHA', '.' ]
 substitutions:
   _EXPRESS_API_URL: localhost:8000
-images: ['gcr.io/mssandbox-278805/mssandbox_express_api:$SHORT_SHA']
+images: ['gcr.io/mssandbox-278805/mssandbox_admin:$SHORT_SHA']
