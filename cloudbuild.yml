@@ -2,8 +2,8 @@ steps:
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: /bin/bash
     args: ["-c", 'echo "REACT_APP_EXPRESS_API_URL=$_EXPRESS_API_URL" > .env']
-    substitutions:
-      _EXPRESS_API_URL: localhost:8000
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'build', '-t', 'gcr.io/mssandbox-278805/mssandbox_admin:$SHORT_SHA', '.' ]
+substitutions:
+  _EXPRESS_API_URL: localhost:8000
 images: ['gcr.io/mssandbox-278805/mssandbox_express_api:$SHORT_SHA']
